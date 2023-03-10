@@ -1,11 +1,42 @@
 #![deny(clippy::all)]
+use rand::Rng;
+use std::cmp::Ordering;
+use std::io;
 
-const MY_AGE: u8 = 22;
 fn main() {
-    let name = "frank"; //string
-    let name = 30u8; // integers
-    let personal_data = (22, "dfd"); // tuples
-    let frank = personal_data.0;
-    // first_name = 50;
-    println!("Hello {}!", name);
+    println!("Guess the number!");
+    let secret_number = rand::thread_rng().gen_range(1..=100);
+
+    loop {
+        println!("Please input your guess.");
+        // println!("The secret number is: {secret_number}");
+
+        // std::io::stdin().read_line(buf)
+
+        let mut guess = String::new();
+
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Failed to read line");
+
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(e) => {
+                println!("{}", e);
+                println!("guess must be a number!! TRY AGAIN");
+                continue;
+            }
+        };
+
+        println!("You guessed: {guess}");
+
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => {
+                println!("You win!");
+                break;
+            }
+        }
+    }
 }
