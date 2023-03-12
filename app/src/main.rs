@@ -1,42 +1,28 @@
 #![deny(clippy::all)]
-use rand::Rng;
-use std::cmp::Ordering;
-use std::io;
 
 fn main() {
-    println!("Guess the number!");
-    let secret_number = rand::thread_rng().gen_range(1..=100);
+    let mut s = String::from("hello");
 
-    loop {
-        println!("Please input your guess.");
-        // println!("The secret number is: {secret_number}");
+    let r1 = &s; // no problem
+    let r2 = &s; // no problem
 
-        // std::io::stdin().read_line(buf)
-
-        let mut guess = String::new();
-
-        io::stdin()
-            .read_line(&mut guess)
-            .expect("Failed to read line");
-
-        let guess: u32 = match guess.trim().parse() {
-            Ok(num) => num,
-            Err(e) => {
-                println!("{}", e);
-                println!("guess must be a number!! TRY AGAIN");
-                continue;
-            }
-        };
-
-        println!("You guessed: {guess}");
-
-        match guess.cmp(&secret_number) {
-            Ordering::Less => println!("Too small!"),
-            Ordering::Greater => println!("Too big!"),
-            Ordering::Equal => {
-                println!("You win!");
-                break;
-            }
-        }
-    }
+    println!("{}, {}, ", r1, r2);
+    let r3 = &mut s; // BIG PROBLEM
+    println!("{}, ", r3);
 }
+
+/*
+- Every value in rust has an owner
+ - There can only be one owner at a time
+ -  Once the owner goes out of scope the value is dropped
+
+ #STRING
+  is made up of three parts
+   - a pointer to the memory that holds the contents of the string
+   - a length
+   - a capacity
+
+   RULES of REFERENCES
+   - At any given time, you can have either one mutable reference or any number of immutable refrences
+   - References must alwyas be valid
+*/
